@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>WebRTC with Firebase</title>
+  <!-- Firebase App (the core Firebase SDK) -->
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js';
+    import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCJHduAcGwyItRltuzWuDhDTMKo8XduvsQ",
+      authDomain: "web-video-chat-ea7f4.firebaseapp.com",
+      databaseURL: "https://web-video-chat-ea7f4-default-rtdb.firebaseio.com",
+      projectId: "web-video-chat-ea7f4",
+      storageBucket: "web-video-chat-ea7f4.appspot.com",
+      messagingSenderId: "236341330399",
+      appId: "1:236341330399:web:40b0dfbf0bd64c579b846a"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const firestore = getFirestore(app);
+
+    // Attach Firestore to window for access in main.js
+    window.firestore = firestore;
+  </script>
+</head>
+<body>
+  <button id="webcamButton">Start webcam</button>
+  <video id="webcamVideo" autoplay playsinline></video>
+  <input id="callInput" />
+  <button id="callButton" disabled>Call</button>
+  <button id="answerButton" disabled>Answer</button>
+  <video id="remoteVideo" autoplay playsinline></video>
+  <button id="hangupButton" disabled>Hang up</button>
+
+  <script type="module" src="main.js"></script>
+</body>
+</html>
