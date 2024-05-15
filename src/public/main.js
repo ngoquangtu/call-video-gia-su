@@ -32,7 +32,7 @@ const firestore = window.firestore;
 webcamButton.onclick = async () => {
   localStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
   remoteStream = new MediaStream();
-
+  pc = new RTCPeerConnection(servers); // Initialize peer connection here
   // Push tracks from local stream to peer connection
   localStream.getTracks().forEach((track) => {
     pc.addTrack(track, localStream);
@@ -63,10 +63,13 @@ callButton.onclick = async () => {
 
   callInput.value = callDoc.id;
 
+  if (!pc) {
+    pc = new RTCPeerConnection(servers);
+  }
   // Get candidates for caller, save to db
-  pc.onicecandidate = (event) => {
-    event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
-  };
+    pc.onicecandidate = (event) => {
+      event.candidate && addDoc(offerCandidates, event.candidate.toJSON());
+    };
 
   // Create offer
   const offerDescription = await pc.createOffer();
@@ -108,6 +111,9 @@ answerButton.onclick = async () => {
   const answerCandidates = collection(callDoc, 'answerCandidates');
   const offerCandidates = collection(callDoc, 'offerCandidates');
 
+  if (!pc) {
+    pc = new RTCPeerConnection(servers);
+  }
   pc.onicecandidate = (event) => {
     event.candidate && addDoc(answerCandidates, event.candidate.toJSON());
   };
@@ -142,7 +148,6 @@ answerButton.onclick = async () => {
 hangupButton.onclick = async () => {
   // Close the peer connection
   pc.close();
-  pc = new RTCPeerConnection(servers);
 
   // Cleanup local media
   if (localStream) {
